@@ -1,0 +1,30 @@
+Activity-1 
+
+
+Enumm Users: 
+Enum Comnputer: 
+Enum Domain Admins: 
+Enum Enterprise Admin: 
+Enum Shares 
+---------------------------------------------------------------------
+. .\powerview.ps1 
+
+A: 
+$ Get-NetUser | select samaccountname
+$ Get-NetUser | select -ExpandProperty samaccountname
+
+B:
+$ Get-NetComputer > ..\..\Users\student201\Desktop\computers.txt
+
+C:
+Get-NetGroup 
+Get-NetGroupMemeber -GroupName "Domain Admins" | select -ExpandProperty MemberName 
+
+D: 
+Get-NetGroupMember  -GroupName "Enterprise Admins" -domain moneycorp.local| select -ExpandProperty MemberName
+
+
+E: 
+ Invoke-ShareFinder -ExcludeStandard -ExcludePrint -ExcludeIPC -Verbose
+
+

@@ -1,0 +1,37 @@
+Enumerate following for the dollarcorp domain:
+● List all the OUs
+● List all the computers in the StudentMachines OU.
+● List the GPOs
+● Enumerate GPO applied on the StudentMachines OU.
+
+
+A: 
+ Restricted Groups: 
+
+:$ Get-NetGPOGroup
+
+ Membership of Group RDPUsers: 
+
+:$  Get-NetGroupMember -GroupName "RDPUsers" | select -ExpandProperty MemberName
+
+B: 
+
+List OUs 
+
+:$  Get-NetOU
+
+List All Computers in StudentMachines 
+
+:$  Get-NetOU  StudentMachines | %{ Get-NetComputer -ADSpath $_ }
+
+:$ Get-NetOU   | %{ echo $_.Split("=")[1].Split(",")[0]    } | %{echo "[+] $_";GET-NETOU $_ | %{Get-NetComputer -ADSPath $_ ; echo ""} }
+
+C:
+
+ GET-NETGPO | select -ExpandProperty displayNAme
+ GET-NETGPO | select -ExpandProperty ADSPath 
+
+
+D: 
+
+ :$ Get-NetOu StudentMachines -FullData | select -ExcludeProperty gplink |%{ Get-NetGPO -ADSPath $_.gplink.Split(";")[0].Split("[")[1] }

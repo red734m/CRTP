@@ -1,0 +1,20 @@
+Enumerate following for the dollarcorp domain:
+? ACL for the Users group
+? ACL for the Domain Admins group
+? All modify rights/permissions for the studentx
+
+A: 
+ Get-ObjectAcl  -SamAccountName users -ResolveGUIDs -Verbose
+
+B:  
+ Get-ObjectAcl  -SamAccountName "Domain Admins"  -ResolveGUIDs -Verbose
+
+C:
+Enumerate ACL for all GPO
+  Get-NetGPo | %{Get-ObjectAcl -ResolveGUIDs -Name $_.Name}
+Enumerate ACL for studentx 
+    Get-NetGPo | %{Get-ObjectAcl -ResolveGUIDs -Name $_.Name}| ?{$_.IdentityReference -match 'student'}
+Enumerate ACL for RDPUsers 
+    Get-NetGPo | %{Get-ObjectAcl -ResolveGUIDs -Name $_.Name}| ?{$_.IdentityReference -match 'RDPUsers'}
+>> List modify right/permissions
+    Invoke-ACLScanner -ResolveGUIDs | ?{$_.IdentityReference -match "student"}
